@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Paploo">
+  <title>Paploo</title>
+  <rect width="64" height="64" rx="14" fill="#3F0E40"/>
+  <path d="M20.5 48V16H32.5A11 11 0 0 1 32.5 38H20.5" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M26.5 32.5Q27 23.5 36 23.5Q35.5 32 26.5 32.5Z" fill="#007A5A"/>
+</svg>

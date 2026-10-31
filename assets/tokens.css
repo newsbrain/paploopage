@@ -1,0 +1,608 @@
+/* Design tokens (web/src/ui/README.md). The only place raw colours, sizes and shadows live: components
+   and pages use these variables.
+
+   Layers, from raw to meaning:
+     1. palette and scales  (--neutral-*, --text-*, --space-*, --radius-*, --shadow-*)
+     2. semantic roles      (--color-bg, --color-fg-muted, --color-ok-fg, --focus-ring ...)
+     3. chat aliases        (--bg, --fg, --accent ...) kept so chat and web can share one sheet.
+   Components only use layer 2 and 3.
+
+   One accent (teal, the chat's) for actions, links and selection. Status has its own semantic set
+   (ok, warn, error, info, paused, neutral) so "Ready" and "Save" never read as the same thing.
+   Every fg/bg pair below meets WCAG AA (>= 4.5:1 text, >= 3:1 UI) in both themes; tokens.test.ts
+   computes the ratios. Hover and pressed darken in both themes, so white text keeps its contrast.
+
+   Theme: light by default; dark when the OS asks (prefers-color-scheme) unless <html data-theme="light">,
+   or always with data-theme="dark" (on <html>, or on any .ui-theme container, which the style guide
+   uses to show both themes side by side). */
+
+/* --font and --font-mono name Geist first. The @font-face rules live in ui/fonts/fonts.css, which the
+   app imports (app/main.tsx); the artifact kit inlines this file and must not carry the font files. */
+
+:root {
+  color-scheme: light;
+
+  /* ---- type: one scale, named by role ---- */
+  --font: Geist, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --text-2xs: 11px; /* uppercase eyebrow labels, table chips */
+  --text-label: var(--text-2xs); /* alias (older name) */
+  --text-xs: 12px; /* captions, helper text, badges */
+  --text-sm: 13px; /* dense UI: controls, table cells, labels */
+  --text-md: 14px; /* body */
+  --text-title: 15px; /* card / section title */
+  --text-lg: 16px; /* dialog title, empty-state title */
+  --text-xl: 20px; /* page title */
+  --text-2xl: 24px; /* at-a-glance numbers */
+  --text-3xl: 32px; /* display (setup welcome) */
+  --leading: 1.5;
+  --leading-tight: 1.25;
+  --leading-snug: 1.35;
+  --leading-code: 1.55; /* code and JSON blocks */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: var(--weight-semibold); /* headings are semibold: 700+ reads heavy at these sizes */
+  --weight-black: var(--weight-semibold);
+  --tracking-caps: 0.04em;
+  --tracking-tight: -0.015em; /* large titles (28 px+): CC .today-h h1 */
+  /* composite type roles (font shorthand: weight size/line-height family) */
+  --type-page-title: var(--weight-semibold) var(--text-xl) / var(--leading-tight) var(--font);
+  --type-section-title: var(--weight-semibold) var(--text-title) / var(--leading-snug) var(--font);
+  --type-body: var(--weight-regular) var(--text-md) / var(--leading) var(--font);
+  --type-body-sm: var(--weight-regular) var(--text-sm) / var(--leading) var(--font);
+  --type-label: var(--weight-medium) var(--text-sm) / var(--leading-snug) var(--font);
+  --type-caption: var(--weight-regular) var(--text-xs) / var(--leading-snug) var(--font);
+  --type-eyebrow: var(--weight-medium) var(--text-2xs) / 1 var(--font);
+  --type-mono: var(--weight-regular) var(--text-sm) / var(--leading) var(--font-mono);
+  --numeric: tabular-nums; /* every table and stat uses font-variant-numeric: var(--numeric) */
+
+  /* ---- 4px spacing scale; section spacing (6, 8, 10) is larger than inner spacing (1-4) ---- */
+  --space-0: 0;
+  --space-0-5: 2px;
+  --space-1: 4px;
+  --space-1-5: 6px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --gap-inline: var(--space-2); /* between siblings in a row (buttons, chips) */
+  --gap-stack: var(--space-3); /* between fields in a form */
+  --gap-section: var(--space-8); /* between page sections */
+  --gutter: var(--space-4); /* page side padding at 400px */
+
+  /* ---- shape ---- */
+  --radius-xs: 3px;
+  --radius-sm: 4px; /* checkbox, kbd, small badges */
+  --radius-md: 6px; /* controls: buttons, inputs, menu items */
+  --radius-lg: 8px; /* cards, dialogs, banners */
+  --radius-xl: 12px; /* large surfaces, drawers */
+  --radius-pill: 999px;
+
+  /* ---- sizes ---- */
+  --control-sm: 28px;
+  --control-md: 32px;
+  --control-lg: 36px;
+  --control-xl: 40px;
+  --textarea-min: calc(var(--space-10) * 2.2); /* a plain multi-line field at rest (88px) */
+  --textarea-max: calc(var(--space-10) * 5); /* where an autoGrow box stops growing and scrolls */
+  --count-h: calc(var(--space-4) + var(--space-0-5)); /* one height for every count badge (18px) */
+  --crumb-row: var(--space-5); /* the breadcrumb row height, drawn only when a page has crumbs */
+  --icon-sm: 14px;
+  --icon-md: 16px;
+  --icon-lg: 20px;
+  --nav-width: 240px;
+  --topbar: 48px; /* app top bar height */
+  --content-max: 760px;
+  --content-wide: 1040px;
+  --content-full: 1440px;
+  --pane-default: 440px; /* right pane (inspector) width */
+  --pane-min: 360px;
+  --pane-max: 760px;
+  --row: 30px; /* list row */
+  --row-table: 36px; /* table row */
+  --border-width: 1px;
+
+  /* ---- motion: enter decelerates, exit accelerates; reduced motion zeroes the durations ---- */
+  --dur-1: 100ms; /* hover, pressed */
+  --dur-2: 160ms; /* fades, menus, tooltips */
+  --dur-3: 240ms; /* dialogs, drawers */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --ease-exit: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --ease: var(--ease-standard);
+  --dur-fast: var(--dur-1);
+  --dur: var(--dur-2);
+
+  /* ---- layers ---- */
+  --z-sticky: 10;
+  --z-nav: 20;
+  --z-overlay: 100;
+  --z-toast: 200;
+  --z-tooltip: 300;
+
+  /* ---- neutral palette (warm grey, light) ---- */
+  --neutral-0: #ffffff;
+  --neutral-50: #fafaf9;
+  --neutral-100: #f4f4f2;
+  --neutral-150: #ededea;
+  --neutral-200: #e4e4e0;
+  --neutral-300: #d2d2cd;
+  --neutral-400: #a9aba6;
+  --neutral-500: #7c7f7a;
+  --neutral-600: #5f6368;
+  --neutral-700: #43474d;
+  --neutral-800: #2a2d31;
+  --neutral-900: #1a1c1e;
+
+  /* ---- surfaces: page canvas is a hair off-white so white cards and fields lift from it ---- */
+  --color-bg: var(--neutral-50);
+  --color-bg-subtle: var(--neutral-100);
+  --color-surface: var(--neutral-0);
+  --color-surface-raised: var(--neutral-0);
+  --color-surface-sunken: var(--neutral-100);
+  --color-field: var(--neutral-0);
+  --color-field-fill: var(--neutral-100); /* secondary / tertiary button fills, chips */
+  --color-hover: rgba(26, 28, 30, 0.04);
+  --color-pressed: rgba(26, 28, 30, 0.08);
+  --color-selected: rgba(14, 124, 102, 0.08);
+  --color-overlay: rgba(26, 28, 30, 0.45);
+
+  /* ---- borders ---- */
+  --color-border: var(--neutral-200);
+  --color-border-subtle: var(--neutral-150);
+  --color-border-strong: var(--neutral-300);
+  --color-input-border: #858984;
+  --color-input-border-hover: var(--neutral-600);
+  --color-input-border-focus: var(--color-accent);
+
+  /* ---- text ---- */
+  --color-fg: var(--neutral-900); /* 16.9:1 on surface */
+  --color-fg-muted: var(--neutral-600); /* 5.9:1 */
+  --color-fg-subtle: #6a6e72; /* 5.1:1 on surface, 4.7:1 on sunken: captions and placeholders pass AA */
+  --color-fg-disabled: var(--neutral-400);
+  --color-fg-on-accent: #ffffff;
+  --color-link: var(--color-accent);
+  --color-link-hover: var(--color-accent-hover);
+
+  /* ---- accent: one. Primary buttons, links, selection, focus. Not status. ---- */
+  --color-accent: #0e7c66; /* 5.2:1 on white */
+  --color-accent-hover: #0b6652;
+  --color-accent-pressed: #08523f;
+  --color-accent-subtle: rgba(14, 124, 102, 0.1);
+  --color-accent-fg: #0b6652; /* accent as text on light surfaces (6.6:1) */
+  --color-primary: var(--color-accent);
+  --color-primary-hover: var(--color-accent-hover);
+  --color-primary-pressed: var(--color-accent-pressed);
+  --color-brand: var(--color-accent);
+  --color-brand-fg: var(--color-accent-fg);
+  --color-brand-subtle: var(--color-accent-subtle);
+
+  /* ---- semantic status: fg (text), bg (tint), dot (solid mark), border. Separate from the accent. ---- */
+  --color-ok-fg: #166534; /* 6.4:1 on #e7f5ec */
+  --color-ok-bg: #e7f5ec;
+  --color-ok-dot: #16a34a;
+  --color-ok-border: #a7d8b7;
+  --color-warn-fg: #8a4b06; /* 6.6:1 on #fdf1dc */
+  --color-warn-bg: #fdf1dc;
+  --color-warn-dot: #c56a05; /* 3.6:1 on white as a mark */
+  --color-warn-border: #f3cf8a;
+  --color-error-fg: #a3202a; /* 6.4:1 on #fdecec */
+  --color-error-bg: #fdecec;
+  --color-error-dot: #d9363e;
+  --color-error-border: #f2b4b7;
+  --color-info-fg: #1b4fcc; /* 6.1:1 on #e9effd */
+  --color-info-bg: #e9effd;
+  --color-info-dot: #2f6bea;
+  --color-info-border: #b7c8f5;
+  --color-paused-fg: #5b3fb0; /* 6.6:1 on #efeafc */
+  --color-paused-bg: #efeafc;
+  --color-paused-dot: #7c5cd6;
+  --color-paused-border: #cfc2f3;
+  --color-neutral-fg: var(--color-fg-muted);
+  --color-neutral-bg: var(--neutral-100);
+  --color-neutral-dot: var(--neutral-500); /* also the switch's off track: 4:1 */
+  --color-neutral-border: var(--neutral-300);
+
+  /* older status names map onto the semantic set */
+  --color-success: var(--color-ok-dot);
+  --color-success-fg: var(--color-ok-fg);
+  --color-success-bg: var(--color-ok-bg);
+  --color-warning: var(--color-warn-dot);
+  --color-warning-fg: var(--color-warn-fg);
+  --color-warning-bg: var(--color-warn-bg);
+  --color-danger: #b4232a; /* destructive buttons: white text on it is 6.5:1 */
+  --color-danger-hover: #951c22;
+  --color-danger-pressed: #7a161b;
+  --color-danger-fg: var(--color-error-fg);
+  --color-danger-bg: var(--color-error-bg);
+  --color-info: var(--color-info-dot);
+  --color-presence: var(--color-ok-dot);
+  --color-code-bg: #f6f6f4;
+  --color-code-fg: var(--color-fg);
+  --color-code-border: var(--color-border);
+  --color-code-gutter: #8a8d88;
+  --color-code-key: #5b3fb0;
+  --color-code-string: #166534;
+  --color-code-number: #1b4fcc;
+  --color-code-literal: #a3202a;
+  --color-code-punct: #6a6e72;
+  --color-diff-add-bg: #e7f5ec;
+  --color-diff-add-fg: #166534;
+  --color-diff-del-bg: #fdecec;
+  --color-diff-del-fg: #a3202a;
+  --color-mark-bg: #fde68a; /* search match */
+  --color-highlight-bg: #fff7e0; /* highlighted row or line */
+  --color-highlight-line: #e9c46a;
+
+  /* avatars: white initials pass 4.5:1 on each */
+  --color-avatar-1: #0e7c66;
+  --color-avatar-2: #5b4fc4;
+  --color-avatar-3: #b2416a;
+  --color-avatar-4: #2f6aa8;
+  --color-avatar-5: #9a5a12;
+  --color-avatar-6: #4d6b2f;
+
+  /* tooltips and toasts: near-black in both themes */
+  --color-inverse-bg: #1f2225;
+  --color-inverse-fg: #ffffff;
+  --color-inverse-muted: rgba(255, 255, 255, 0.72);
+  --color-inverse-hover: rgba(255, 255, 255, 0.12);
+  --color-inverse-danger: #ff8a8f;
+  --color-inverse-ok: #4ade80;
+  --color-inverse-warn: #fbbf24;
+  --color-inverse-info: #7fb0ff;
+
+  /* ---- focus: a 2px gap then a solid 2px accent ring (3:1 against every surface) ---- */
+  --focus-ring-color: var(--color-accent);
+  --focus-ring: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--focus-ring-color);
+  --focus-ring-danger: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-danger);
+  --focus-ring-field: 0 0 0 calc(var(--space-0-5) * 1.5) var(--color-accent-subtle);
+  --focus-ring-field-invalid: 0 0 0 calc(var(--space-0-5) * 1.5) color-mix(in srgb, var(--color-error-dot) 15%, transparent);
+  --color-primary-disabled: var(--color-field-fill);
+  --color-danger-disabled: var(--color-field-fill);
+  --color-fg-on-primary-disabled: var(--color-fg-disabled);
+  --focus-ring-inset: inset 0 0 0 2px var(--focus-ring-color);
+
+  /* ---- elevation: 0 flat (border), 1 cards on hover, 2 menus/popovers, 3 dialogs/drawers ---- */
+  --shadow-xs: 0 1px 2px rgba(26, 28, 30, 0.05);
+  --shadow-sm: 0 1px 2px rgba(26, 28, 30, 0.05), 0 1px 4px rgba(26, 28, 30, 0.06);
+  --shadow-md: 0 1px 3px rgba(26, 28, 30, 0.06), 0 6px 16px rgba(26, 28, 30, 0.1);
+  --shadow-lg: 0 2px 6px rgba(26, 28, 30, 0.08), 0 20px 48px rgba(26, 28, 30, 0.18);
+  --mark-filter: none; /* package marks (PackageMark) are single-colour black; dark themes invert them */
+  --shadow-pop: var(--shadow-md);
+
+  /* ---- chat names (the retired plain-JS chat client's token names) ---- */
+  --bg: var(--color-surface);
+  --side: var(--color-bg-subtle);
+  --card: var(--color-surface);
+  --field: var(--color-field-fill);
+  --active: var(--color-pressed);
+  --hover: var(--color-hover);
+  --line: var(--color-border);
+  --line-strong: var(--color-border-strong);
+  --fg: var(--color-fg);
+  --muted: var(--color-fg-muted);
+  --accent: var(--color-accent);
+  --accent-hover: var(--color-accent-hover);
+  --danger: var(--color-error-fg);
+  --warn: var(--color-warning-fg);
+  --ok: var(--color-success);
+  --focus: var(--focus-ring);
+  --r-sm: var(--radius-md);
+  --r: var(--radius-lg);
+  --r-card: var(--radius-lg);
+  --r-box: var(--radius-xl);
+  --fs-body: var(--text-md);
+  --fs-meta: var(--text-xs);
+  --fs-title: var(--text-title);
+  --fs-label: var(--text-label);
+  --lh: var(--leading);
+  --mono: var(--font-mono);
+}
+
+/* Dark. Only the values change; every alias follows. The three selectors carry the same block:
+   OS dark (unless the page opted into light), forced dark on <html>, and a .ui-theme container. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-bg: #121416;
+    --color-bg-subtle: #0d0f11;
+    --color-surface: #1a1d20;
+    --color-surface-raised: #22262a;
+    --color-surface-sunken: #0d0f11;
+    --color-field: #1a1d20;
+    --color-field-fill: #262a2f;
+    --color-hover: rgba(255, 255, 255, 0.05);
+    --color-pressed: rgba(255, 255, 255, 0.1);
+    --color-overlay: rgba(0, 0, 0, 0.6);
+    --color-border: #2a2f35;
+    --color-border-subtle: #22272c;
+    --color-border-strong: #3b4149;
+    --color-input-border: #6b7380;
+    --color-input-border-hover: #8a929b;
+    --color-fg: #e8eaed;
+    --color-fg-muted: #9aa3ad;
+    --color-fg-subtle: #8a929b;
+    --color-fg-disabled: #5c636b;
+    --color-accent: #0e7c66;
+    --color-accent-hover: #0b6652;
+    --color-accent-pressed: #08523f;
+    --color-accent-fg: #4cc3a6;
+    --color-link: #4cc3a6;
+    --color-ok-fg: #5fd38a;
+    --color-ok-bg: rgba(34, 197, 94, 0.14);
+    --color-ok-dot: #22c55e;
+    --color-ok-border: rgba(34, 197, 94, 0.4);
+    --color-warn-fg: #f5c04a;
+    --color-warn-bg: rgba(245, 158, 11, 0.14);
+    --color-warn-dot: #f59e0b;
+    --color-warn-border: rgba(245, 158, 11, 0.4);
+    --color-error-fg: #ff8a8f;
+    --color-error-bg: rgba(239, 68, 68, 0.14);
+    --color-error-dot: #ef4444;
+    --color-error-border: rgba(239, 68, 68, 0.4);
+    --color-info-fg: #8ab4ff;
+    --color-info-bg: rgba(59, 130, 246, 0.14);
+    --color-info-dot: #3b82f6;
+    --color-info-border: rgba(59, 130, 246, 0.4);
+    --color-paused-fg: #bda7ff;
+    --color-paused-bg: rgba(139, 92, 246, 0.16);
+    --color-paused-dot: #8b5cf6;
+    --color-paused-border: rgba(139, 92, 246, 0.4);
+    --color-neutral-bg: #262a2f;
+    --color-selected: rgba(76, 195, 166, 0.12);
+    --color-accent-subtle: rgba(76, 195, 166, 0.12);
+    --color-code-bg: #121518;
+    --color-code-gutter: #6b7380;
+    --color-code-key: #c4b2ff;
+    --color-code-string: #7fdc9f;
+    --color-code-number: #8ab4ff;
+    --color-code-literal: #ff9da1;
+    --color-code-punct: #8a929b;
+    --color-diff-add-bg: rgba(34, 197, 94, 0.14);
+    --color-diff-add-fg: #7fdc9f;
+    --color-diff-del-bg: rgba(239, 68, 68, 0.14);
+    --color-diff-del-fg: #ff9da1;
+    --color-mark-bg: rgba(245, 192, 74, 0.35);
+    --color-highlight-bg: rgba(233, 196, 106, 0.12);
+    --color-highlight-line: #b8952f;
+    --color-avatar-1: #0e7c66;
+    --color-avatar-2: #5b4fc4;
+    --color-avatar-3: #a33a60;
+    --color-avatar-4: #2f6aa8;
+    --color-avatar-5: #8a5010;
+    --color-avatar-6: #46622a;
+    --color-neutral-dot: #6b7280;
+    --color-neutral-border: #3b4149;
+    --color-danger: #c7383d;
+    --color-danger-hover: #b4232a;
+    --color-danger-pressed: #951c22;
+    --color-inverse-bg: #f1f3f5;
+    --color-inverse-fg: #1a1c1e;
+    --color-inverse-muted: rgba(26, 28, 30, 0.7);
+    --color-inverse-hover: rgba(26, 28, 30, 0.1);
+    --color-inverse-danger: #b4232a;
+    --color-inverse-ok: #15803d;
+    --color-inverse-warn: #92400e;
+    --color-inverse-info: #1d4ed8;
+    --focus-ring-color: #4cc3a6;
+    --focus-ring-danger: 0 0 0 2px var(--color-surface), 0 0 0 4px #ff8a8f;
+    --focus-ring-field: 0 0 0 calc(var(--space-0-5) * 1.5) var(--color-accent-subtle);
+    --focus-ring-field-invalid: 0 0 0 calc(var(--space-0-5) * 1.5) color-mix(in srgb, var(--color-error-dot) 15%, transparent);
+    --color-primary-disabled: var(--color-field-fill);
+    --color-danger-disabled: var(--color-field-fill);
+    --color-fg-on-primary-disabled: var(--color-fg-disabled);
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 24px 56px rgba(0, 0, 0, 0.6);
+    --mark-filter: invert(1);
+  }
+}
+.ui-theme[data-theme="dark"],
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #121416;
+  --color-bg-subtle: #0d0f11;
+  --color-surface: #1a1d20;
+  --color-surface-raised: #22262a;
+  --color-surface-sunken: #0d0f11;
+  --color-field: #1a1d20;
+  --color-field-fill: #262a2f;
+  --color-hover: rgba(255, 255, 255, 0.05);
+  --color-pressed: rgba(255, 255, 255, 0.1);
+  --color-overlay: rgba(0, 0, 0, 0.6);
+  --color-border: #2a2f35;
+  --color-border-subtle: #22272c;
+  --color-border-strong: #3b4149;
+  --color-input-border: #6b7380;
+  --color-input-border-hover: #8a929b;
+  --color-fg: #e8eaed;
+  --color-fg-muted: #9aa3ad;
+  --color-fg-subtle: #8a929b;
+  --color-fg-disabled: #5c636b;
+  --color-accent: #0e7c66;
+  --color-accent-hover: #0b6652;
+  --color-accent-pressed: #08523f;
+  --color-accent-fg: #4cc3a6;
+  --color-link: #4cc3a6;
+  --color-ok-fg: #5fd38a;
+  --color-ok-bg: rgba(34, 197, 94, 0.14);
+  --color-ok-dot: #22c55e;
+  --color-ok-border: rgba(34, 197, 94, 0.4);
+  --color-warn-fg: #f5c04a;
+  --color-warn-bg: rgba(245, 158, 11, 0.14);
+  --color-warn-dot: #f59e0b;
+  --color-warn-border: rgba(245, 158, 11, 0.4);
+  --color-error-fg: #ff8a8f;
+  --color-error-bg: rgba(239, 68, 68, 0.14);
+  --color-error-dot: #ef4444;
+  --color-error-border: rgba(239, 68, 68, 0.4);
+  --color-info-fg: #8ab4ff;
+  --color-info-bg: rgba(59, 130, 246, 0.14);
+  --color-info-dot: #3b82f6;
+  --color-info-border: rgba(59, 130, 246, 0.4);
+  --color-paused-fg: #bda7ff;
+  --color-paused-bg: rgba(139, 92, 246, 0.16);
+  --color-paused-dot: #8b5cf6;
+  --color-paused-border: rgba(139, 92, 246, 0.4);
+  --color-neutral-bg: #262a2f;
+  --color-selected: rgba(76, 195, 166, 0.12);
+  --color-accent-subtle: rgba(76, 195, 166, 0.12);
+  --color-code-bg: #121518;
+  --color-code-gutter: #6b7380;
+  --color-code-key: #c4b2ff;
+  --color-code-string: #7fdc9f;
+  --color-code-number: #8ab4ff;
+  --color-code-literal: #ff9da1;
+  --color-code-punct: #8a929b;
+  --color-diff-add-bg: rgba(34, 197, 94, 0.14);
+  --color-diff-add-fg: #7fdc9f;
+  --color-diff-del-bg: rgba(239, 68, 68, 0.14);
+  --color-diff-del-fg: #ff9da1;
+  --color-mark-bg: rgba(245, 192, 74, 0.35);
+  --color-highlight-bg: rgba(233, 196, 106, 0.12);
+  --color-highlight-line: #b8952f;
+  --color-avatar-1: #0e7c66;
+  --color-avatar-2: #5b4fc4;
+  --color-avatar-3: #a33a60;
+  --color-avatar-4: #2f6aa8;
+  --color-avatar-5: #8a5010;
+  --color-avatar-6: #46622a;
+  --color-neutral-dot: #6b7280;
+  --color-neutral-border: #3b4149;
+  --color-danger: #c7383d;
+  --color-danger-hover: #b4232a;
+  --color-danger-pressed: #951c22;
+  --color-inverse-bg: #f1f3f5;
+  --color-inverse-fg: #1a1c1e;
+  --color-inverse-muted: rgba(26, 28, 30, 0.7);
+  --color-inverse-hover: rgba(26, 28, 30, 0.1);
+  --color-inverse-danger: #b4232a;
+  --color-inverse-ok: #15803d;
+  --color-inverse-warn: #92400e;
+  --color-inverse-info: #1d4ed8;
+  --focus-ring-color: #4cc3a6;
+  --focus-ring-danger: 0 0 0 2px var(--color-surface), 0 0 0 4px #ff8a8f;
+  --focus-ring-field: 0 0 0 calc(var(--space-0-5) * 1.5) var(--color-accent-subtle);
+  --focus-ring-field-invalid: 0 0 0 calc(var(--space-0-5) * 1.5) color-mix(in srgb, var(--color-error-dot) 15%, transparent);
+  --color-primary-disabled: var(--color-field-fill);
+  --color-danger-disabled: var(--color-field-fill);
+  --color-fg-on-primary-disabled: var(--color-fg-disabled);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 24px 56px rgba(0, 0, 0, 0.6);
+  --mark-filter: invert(1);
+}
+/* A light island inside a dark page (the style guide's side-by-side) re-asserts the light values. */
+.ui-theme[data-theme="light"] {
+  color-scheme: light;
+  --color-bg: var(--neutral-50);
+  --color-bg-subtle: var(--neutral-100);
+  --color-surface: var(--neutral-0);
+  --color-surface-raised: var(--neutral-0);
+  --color-surface-sunken: var(--neutral-100);
+  --color-field: var(--neutral-0);
+  --color-field-fill: var(--neutral-100);
+  --color-hover: rgba(26, 28, 30, 0.04);
+  --color-pressed: rgba(26, 28, 30, 0.08);
+  --color-overlay: rgba(26, 28, 30, 0.45);
+  --color-border: var(--neutral-200);
+  --color-border-subtle: var(--neutral-150);
+  --color-border-strong: var(--neutral-300);
+  --color-input-border: #858984;
+  --color-input-border-hover: var(--neutral-600);
+  --color-fg: var(--neutral-900);
+  --color-fg-muted: var(--neutral-600);
+  --color-fg-subtle: #6a6e72;
+  --color-fg-disabled: var(--neutral-400);
+  --color-accent: #0e7c66;
+  --color-accent-hover: #0b6652;
+  --color-accent-pressed: #08523f;
+  --color-accent-fg: #0b6652;
+  --color-link: var(--color-accent);
+  --color-ok-fg: #166534;
+  --color-ok-bg: #e7f5ec;
+  --color-ok-dot: #16a34a;
+  --color-ok-border: #a7d8b7;
+  --color-warn-fg: #8a4b06;
+  --color-warn-bg: #fdf1dc;
+  --color-warn-dot: #c56a05; /* 3.6:1 on white as a mark */
+  --color-warn-border: #f3cf8a;
+  --color-error-fg: #a3202a;
+  --color-error-bg: #fdecec;
+  --color-error-dot: #d9363e;
+  --color-error-border: #f2b4b7;
+  --color-info-fg: #1b4fcc;
+  --color-info-bg: #e9effd;
+  --color-info-dot: #2f6bea;
+  --color-info-border: #b7c8f5;
+  --color-paused-fg: #5b3fb0;
+  --color-paused-bg: #efeafc;
+  --color-paused-dot: #7c5cd6;
+  --color-paused-border: #cfc2f3;
+  --color-neutral-bg: var(--neutral-100);
+  --color-selected: rgba(14, 124, 102, 0.08);
+  --color-accent-subtle: rgba(14, 124, 102, 0.1);
+  --color-code-bg: #f6f6f4;
+  --color-code-gutter: #8a8d88;
+  --color-code-key: #5b3fb0;
+  --color-code-string: #166534;
+  --color-code-number: #1b4fcc;
+  --color-code-literal: #a3202a;
+  --color-code-punct: #6a6e72;
+  --color-diff-add-bg: #e7f5ec;
+  --color-diff-add-fg: #166534;
+  --color-diff-del-bg: #fdecec;
+  --color-diff-del-fg: #a3202a;
+  --color-mark-bg: #fde68a;
+  --color-highlight-bg: #fff7e0;
+  --color-highlight-line: #e9c46a;
+  --color-avatar-1: #0e7c66;
+  --color-avatar-2: #5b4fc4;
+  --color-avatar-3: #b2416a;
+  --color-avatar-4: #2f6aa8;
+  --color-avatar-5: #9a5a12;
+  --color-avatar-6: #4d6b2f;
+  --color-neutral-dot: var(--neutral-500); /* also the switch's off track: 4:1 */
+  --color-neutral-border: var(--neutral-300);
+  --color-danger: #b4232a;
+  --color-danger-hover: #951c22;
+  --color-danger-pressed: #7a161b;
+  --color-inverse-bg: #1f2225;
+  --color-inverse-fg: #ffffff;
+  --color-inverse-muted: rgba(255, 255, 255, 0.72);
+  --color-inverse-hover: rgba(255, 255, 255, 0.12);
+  --color-inverse-danger: #ff8a8f;
+  --color-inverse-ok: #4ade80;
+  --color-inverse-warn: #fbbf24;
+  --color-inverse-info: #7fb0ff;
+  --focus-ring-color: var(--color-accent);
+  --focus-ring-danger: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-danger);
+  --focus-ring-field: 0 0 0 calc(var(--space-0-5) * 1.5) var(--color-accent-subtle);
+  --focus-ring-field-invalid: 0 0 0 calc(var(--space-0-5) * 1.5) color-mix(in srgb, var(--color-error-dot) 15%, transparent);
+  --color-primary-disabled: var(--color-field-fill);
+  --color-danger-disabled: var(--color-field-fill);
+  --color-fg-on-primary-disabled: var(--color-fg-disabled);
+  --shadow-xs: 0 1px 2px rgba(26, 28, 30, 0.05);
+  --shadow-sm: 0 1px 2px rgba(26, 28, 30, 0.05), 0 1px 4px rgba(26, 28, 30, 0.06);
+  --shadow-md: 0 1px 3px rgba(26, 28, 30, 0.06), 0 6px 16px rgba(26, 28, 30, 0.1);
+  --shadow-lg: 0 2px 6px rgba(26, 28, 30, 0.08), 0 20px 48px rgba(26, 28, 30, 0.18);
+  --mark-filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-1: 0ms;
+    --dur-2: 0ms;
+    --dur-3: 0ms;
+  }
+}

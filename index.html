@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Paploo gives every teammate an isolated agent that works from chat, with scoped access, approvals, and evidence.">
+    <meta name="theme-color" content="#3f0e40">
+    <link rel="canonical" href="https://dagi377.github.io/paploopage/">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/tokens.css">
+    <link rel="stylesheet" href="assets/fonts/fonts.css">
+    <link rel="stylesheet" href="styles.css">
+    <title>Paploo — Your team's agent, where work already happens</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <header class="site-header">
+      <nav class="nav shell" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="Paploo home">
+          <img src="assets/paploo-mark.svg" width="40" height="40" alt="">
+          <span>Paploo</span>
+        </a>
+        <div class="nav-links">
+          <a href="#how-it-works">How it works</a>
+          <a href="#safety">Trust</a>
+          <a href="#skills">Capabilities</a>
+        </div>
+        <div class="nav-actions">
+          <a class="text-link" href="https://github.com/dagi377/paploo">GitHub</a>
+          <a class="button button-small" href="#quick-start">Try local demo</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="content">
+      <section class="hero shell" id="top" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Open-source agent platform for teams</p>
+          <h1 id="hero-title">Your team's agent, where work already happens.</h1>
+          <p class="hero-lede">
+            Paploo gives every teammate an isolated agent in chat—connected to the work they can
+            reach, constrained by policy, and built to show its evidence.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#quick-start">Try the local demo</a>
+            <a class="button button-secondary" href="https://github.com/dagi377/paploo">View on GitHub</a>
+          </div>
+          <p class="hero-note"><span aria-hidden="true">●</span> Mock model by default. No API tokens required.</p>
+        </div>
+
+        <figure class="conversation" aria-labelledby="conversation-caption">
+          <div class="conversation-bar">
+            <div class="channel">
+              <span class="channel-mark" aria-hidden="true">#</span>
+              <div>
+                <strong>incident-worker</strong>
+                <span>8 members</span>
+              </div>
+            </div>
+            <span class="connected"><i aria-hidden="true"></i> Connected</span>
+          </div>
+          <div class="messages">
+            <article class="message">
+              <div class="avatar avatar-mara" aria-hidden="true">MO</div>
+              <div class="message-body">
+                <p class="message-meta"><strong>Mara Okafor</strong><time datetime="2026-10-31T09:41:00Z">09:41</time></p>
+                <p>@paploo why is the worker queue backing up, and who owns the service?</p>
+              </div>
+            </article>
+            <article class="message paploo-message">
+              <img class="avatar" src="assets/paploo-mark.svg" width="36" height="36" alt="Paploo">
+              <div class="message-body">
+                <p class="message-meta"><strong>Paploo</strong><span class="agent-badge">Agent</span><time datetime="2026-10-31T09:41:12Z">09:41</time></p>
+                <p>The queue is waiting on failed catalog lookups after the 09:28 deploy. The worker service is owned by Platform Runtime; Imani is primary on-call.</p>
+                <div class="evidence-card">
+                  <p class="evidence-title"><span aria-hidden="true">✓</span> Checked 4 sources</p>
+                  <ul>
+                    <li><span>Deploy</span><strong>worker@8f31c7</strong></li>
+                    <li><span>Dashboard</span><strong>lookup errors 6.2×</strong></li>
+                    <li><span>Catalog</span><strong>Platform Runtime</strong></li>
+                    <li><span>On-call</span><strong>Imani Reed</strong></li>
+                  </ul>
+                </div>
+                <div class="approval-line">
+                  <span class="approval-icon" aria-hidden="true">↗</span>
+                  <span><strong>Ready to act</strong> · Roll back worker deploy?</span>
+                  <span class="approval-pill">Needs approval</span>
+                </div>
+              </div>
+            </article>
+          </div>
+          <figcaption id="conversation-caption">Representative Paploo conversation using the seeded demo company.</figcaption>
+        </figure>
+      </section>
+
+      <section class="proof" aria-label="Paploo at a glance">
+        <div class="shell proof-grid">
+          <div><strong>Chat-native</strong><span>Work starts and returns in the thread.</span></div>
+          <div><strong>One agent per person</strong><span>Isolated runtime, identity, and budget.</span></div>
+          <div><strong>Mock-first evaluation</strong><span>Explore the full loop without tokens.</span></div>
+        </div>
+      </section>
+
+      <section class="section shell" id="how-it-works" aria-labelledby="how-title">
+        <div class="section-heading">
+          <p class="eyebrow">How it works</p>
+          <h2 id="how-title">One request. A controlled path to evidence.</h2>
+          <p>Paploo handles the runtime around the model, so teams can focus on useful work instead of agent plumbing.</p>
+        </div>
+        <ol class="steps">
+          <li>
+            <span class="step-number">01</span>
+            <h3>Ask in chat</h3>
+            <p>Mention Paploo in a channel or message it directly. Thread history stays in the chat system.</p>
+          </li>
+          <li>
+            <span class="step-number">02</span>
+            <h3>Work in isolation</h3>
+            <p>Your agent runs in its own container with only your enabled skills, usable connections, and budget.</p>
+          </li>
+          <li>
+            <span class="step-number">03</span>
+            <h3>Return evidence</h3>
+            <p>The answer lands back in context with sources, status, and an approval step before sensitive actions.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="section trust-section" id="safety" aria-labelledby="trust-title">
+        <div class="shell trust-grid">
+          <div class="trust-copy">
+            <p class="eyebrow">Designed for the boundary</p>
+            <h2 id="trust-title">Useful access without an invisible superuser.</h2>
+            <p>
+              Paploo keeps identity, credentials, network reach, and approvals explicit. The platform
+              runs the agent; the harness checks what it does.
+            </p>
+            <a class="inline-link" href="https://github.com/dagi377/paploo/blob/main/README.md#guarantees">Read the guarantees <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="trust-list">
+            <article>
+              <span class="trust-icon" aria-hidden="true">01</span>
+              <div><h3>Per-person isolation</h3><p>Each teammate has a separate container, session, identity, and policy.</p></div>
+            </article>
+            <article>
+              <span class="trust-icon" aria-hidden="true">02</span>
+              <div><h3>Secrets stay short-lived</h3><p>Encrypted credentials reach agent memory only when a turn needs them—never Docker env or disk.</p></div>
+            </article>
+            <article>
+              <span class="trust-icon" aria-hidden="true">03</span>
+              <div><h3>Reach is scoped</h3><p>Egress follows the hosts allowed by the person's usable connections and enabled packages.</p></div>
+            </article>
+            <article>
+              <span class="trust-icon" aria-hidden="true">04</span>
+              <div><h3>Conversation text stays in chat</h3><p>Postgres stores mappings, costs, and audit metadata—not the conversation itself.</p></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section shell" id="skills" aria-labelledby="skills-title">
+        <div class="section-heading">
+          <p class="eyebrow">Capabilities that compose</p>
+          <h2 id="skills-title">Give the agent a job, not blanket access.</h2>
+          <p>Skills describe how work gets done. Connections define what can be reached. Paploo binds them per person at runtime.</p>
+        </div>
+        <div class="capability-grid">
+          <article>
+            <span class="capability-label">Skills</span>
+            <h3>Repeatable ways of working</h3>
+            <p>Package incident response, reviews, reports, and company workflows as inspectable instructions.</p>
+            <div class="mini-ui"><span>incident-memory</span><strong class="ready">Ready</strong></div>
+          </article>
+          <article>
+            <span class="capability-label">Connections</span>
+            <h3>Named, tested access</h3>
+            <p>Personal and organization connections carry explicit read or write scope and health.</p>
+            <div class="mini-ui"><span>ssh / worker-prod</span><strong>Read</strong></div>
+          </article>
+          <article>
+            <span class="capability-label">Approvals</span>
+            <h3>A pause before action</h3>
+            <p>Risky or write operations stop for a clear, contextual confirmation in the work loop.</p>
+            <div class="mini-ui"><span>Roll back deploy</span><strong class="warning">Review</strong></div>
+          </article>
+          <article>
+            <span class="capability-label">Harness</span>
+            <h3>Checks before and after</h3>
+            <p>Policy gates, tests, evidence, evals, and replay turn agent work into a feedback loop.</p>
+            <div class="mini-ui"><span>4 checks passed</span><strong class="ready">Verified</strong></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section quick-start-section" id="quick-start" aria-labelledby="quick-start-title">
+        <div class="shell quick-start-grid">
+          <div class="quick-start-copy">
+            <p class="eyebrow">Try it on your machine</p>
+            <h2 id="quick-start-title">Meet the seeded team in the local demo.</h2>
+            <p>
+              The default install uses the mock model, so it needs no API tokens. The first run builds
+              the images and brings up an isolated k3d cluster.
+            </p>
+            <ul class="requirements">
+              <li><strong>Needs</strong> Docker, k3d, kubectl, Helm, and roughly 30 GiB free</li>
+              <li><strong>Opens</strong> <code>http://localhost:48090</code></li>
+              <li><strong>Start as</strong> Mara Okafor and follow the tour on Home</li>
+            </ul>
+          </div>
+          <div class="command-card">
+            <div class="command-bar">
+              <span>Terminal</span>
+              <button type="button" data-copy-command aria-describedby="copy-status">Copy commands</button>
+            </div>
+            <pre><code id="quick-start-command">git clone https://github.com/dagi377/paploo.git
+cd paploo
+scripts/install.sh</code></pre>
+            <p id="copy-status" class="copy-status" aria-live="polite">Runs the mock model with no API tokens.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div class="footer-brand">
+          <img src="assets/paploo-mark.svg" width="36" height="36" alt="">
+          <div><strong>Paploo</strong><span>Your team's agent, where work already happens.</span></div>
+        </div>
+        <nav aria-label="Project links">
+          <a href="https://github.com/dagi377/paploo">Repository</a>
+          <a href="https://github.com/dagi377/paploo/blob/main/docs/RUNBOOK.md">Runbook</a>
+          <a href="https://github.com/dagi377/paploo/tree/main/docs/adr">Architecture</a>
+          <a href="https://github.com/dagi377/paploo/blob/main/LICENSE">License</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script type="module" src="landing.mjs"></script>
+  </body>
+</html>
